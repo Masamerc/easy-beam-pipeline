@@ -21,7 +21,7 @@ class ConvertLog(beam.DoFn):
         }
 
 
-class CoolectDurationBy(beam.DoFn):
+class CollectDurationBy(beam.DoFn):
     '''
     returns a tuple which consist of (key_name, duration_stay)
     '''
@@ -30,3 +30,18 @@ class CoolectDurationBy(beam.DoFn):
 
     def process(self, elem: Dict):
         yield (elem[self.key_name], elem['duration_stay'])
+
+
+class ParseCSV(beam.DoFn):
+    '''
+    parse raw csv line to dictionary (only used for the dataflow script)
+    '''
+    def process(self, elem):
+        name, id, cc, duration_stay, accessed = elem.split(',')
+        yield {
+            'name': name,
+            'id': id,
+            'cc': cc,
+            'duration_stay': float(duration_stay),
+            'accessed': datetime.datetime.strptime(accessed, '%Y-%m-%d %H:%M:%S',)
+        }

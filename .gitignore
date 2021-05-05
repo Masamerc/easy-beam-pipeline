@@ -1,2 +1,5 @@
 .vscode/
 __pycache__/
+sandbox*.json
+*.egg-info
+*.sh

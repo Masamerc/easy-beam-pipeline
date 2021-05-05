@@ -67,7 +67,7 @@ class WriteToCsv(beam.PTransform):
     def __del__(self):
         self.handler.close()
 
-    def write_dict_to_csv(self, row):
+    def write_dict_to_csv(self, row: Dict):
         writer = DictWriter(self.handler, fieldnames=self.field_names)
         writer.writerow(row)
 

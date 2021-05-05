@@ -4,7 +4,7 @@ from apache_beam.options.pipeline_options import PipelineOptions, StandardOption
 
 # user-defined transformations and functions
 from transformations.ptransforms import ReadFromCsv, WriteToCsv, GroupType
-from transformations.functions import ConvertLog, CoolectDurationBy
+from transformations.functions import ConvertLog, CollectDurationBy
 
 CURDIR = os.getcwd()
 INDIR = os.path.join(CURDIR, 'demo_input_data')
@@ -21,7 +21,7 @@ with beam.Pipeline(options=options) as p:
     )
 
     duration_by_country = (
-        processed | 'collect tuple of (country_code, duration_stay)' >> beam.ParDo(CoolectDurationBy(key_name='cc'))
+        processed | 'collect tuple of (country_code, duration_stay)' >> beam.ParDo(CollectDurationBy(key_name='cc'))
         | 'group by country_code' >> beam.GroupByKey()
         | 'calculate average duration_stay' >> beam.CombineValues(beam.combiners.MeanCombineFn())
         | 'filter country with more 3 sec average duration_stay' >> beam.Filter(lambda tup: tup[1] >= 3.0)
@@ -29,7 +29,7 @@ with beam.Pipeline(options=options) as p:
     )
 
     duration_by_user = (
-        processed | 'collect tuple of (name, duration_stay)' >> beam.ParDo(CoolectDurationBy(key_name='name'))
+        processed | 'collect tuple of (name, duration_stay)' >> beam.ParDo(CollectDurationBy(key_name='name'))
         | 'group by user' >> beam.GroupByKey()
         | 'calculate total duration_stay' >> beam.CombineValues(sum)
         | 'filter user with more 5 sec duration_stay' >> beam.Filter(lambda tup: tup[1] >= 5.0)
