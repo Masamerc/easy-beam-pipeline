@@ -1,11 +1,16 @@
 import apache_beam as beam
 import datetime
 import glob
+import logging
 import os
 
 from csv import DictReader,DictWriter
 from enum import Enum
 from typing import Dict, List
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class GroupType(Enum):
@@ -33,6 +38,7 @@ class ReadFromCsv(beam.PTransform):
                 yield dict(row)
 
     def expand(self, pcollection):
+        logger.info('reading csv files: {}'.format(self.file_patterns))
         return (
             pcollection
             | 'create inputs from file patterns' >> beam.Create(self.file_patterns)
@@ -66,6 +72,7 @@ class WriteToCsv(beam.PTransform):
         writer.writerow(row)
 
     def expand(self, pcollection):
+        logger.info('writing to csv files: {}'.format(self.output_file))
         return (
             pcollection
             | 'convert tuple to dict' >> beam.Map(lambda tup: {self.group_type: tup[0], 'value': tup[1]})

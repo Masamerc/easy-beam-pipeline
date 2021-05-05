@@ -6,7 +6,6 @@ from apache_beam.options.pipeline_options import PipelineOptions, StandardOption
 from transformations.ptransforms import ReadFromCsv, WriteToCsv, GroupType
 from transformations.functions import ConvertLog, CoolectDurationBy
 
-
 CURDIR = os.getcwd()
 INDIR = os.path.join(CURDIR, 'demo_input_data')
 OUTDIR = os.path.join(CURDIR, 'demo_output_data')

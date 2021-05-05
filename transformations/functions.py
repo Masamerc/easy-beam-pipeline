@@ -1,12 +1,16 @@
 import apache_beam as beam
 import datetime
-
+import logging
 from typing import Dict
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class ConvertLog(beam.DoFn):
     '''
     casts duration_stay to float and accessed to datetime object
     '''
+    logger.info('converting logs')
     def process(self, elem: Dict):
         yield {
             'name': elem['name'],
